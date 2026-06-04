@@ -28,7 +28,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add coupe_du_monde_2026.ics
+          git add *.ics
           git diff --staged --quiet || git commit -m "Maj automatique du calendrier CDM 2026"
           git push
  
