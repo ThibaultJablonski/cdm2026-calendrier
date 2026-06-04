@@ -1,0 +1,34 @@
+name: Maj calendrier CDM 2026
+ 
+# Quand le workflow tourne :
+on:
+  schedule:
+    - cron: "0 5 * * *"     # tous les jours à 05:00 UTC (07:00 Paris en été)
+  workflow_dispatch:          # + un bouton "Run workflow" pour lancer à la main
+ 
+permissions:
+  contents: write             # autorise l'Action à committer le fichier mis à jour
+ 
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Récupérer le repo
+        uses: actions/checkout@v4
+ 
+      - name: Installer Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+ 
+      - name: Générer le fichier ICS
+        run: python generate_wc2026_ics.py
+ 
+      - name: Committer si le calendrier a changé
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add coupe_du_monde_2026.ics
+          git diff --staged --quiet || git commit -m "Maj automatique du calendrier CDM 2026"
+          git push
+ 
